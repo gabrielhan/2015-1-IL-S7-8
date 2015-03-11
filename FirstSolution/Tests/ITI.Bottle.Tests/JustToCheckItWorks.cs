@@ -187,6 +187,50 @@ namespace ITI.Bottle.Tests
                 if( ex is AssertionException ) throw;
                 Assert.Fail( "Expected {0} but got a {1}!", typeof(T).Name, ex.GetType().FullName );
             }
+        }
+
+        [Test]
+        public void AwesomeAssertThrows_should_work_like_nunit_assert_throws()
+        {
+            Assert.Throws<AssertionException>( () => AwesomeAssertThrows<Exception>( () => { } ) );
+            Assert.Throws<AssertionException>( () => AwesomeAssertThrows<ArgumentNullException>( () => { } ) );
+            Assert.Throws<AssertionException>( () => AwesomeAssertThrows<AssertionException>( () => { } ) );
+
+            Assert.DoesNotThrow( () => AwesomeAssertThrows<InvalidCastException>( () => { throw (AssertionException)(new Exception()); } ) );
+            Assert.DoesNotThrow( () => AwesomeAssertThrows<OutOfMemoryException>( () => { throw new OutOfMemoryException(); } ) );
+
+            Assert.Throws<AssertionException>( () => AwesomeAssertThrows<AssertionException>( () => { throw new Exception(); } ) );
+            Assert.Throws<AssertionException>( () => AwesomeAssertThrows<StubAssertionException>( () => { throw new AssertionException( String.Empty ); } ) );
+
+            Assert.DoesNotThrow( () => AwesomeAssertThrows<AssertionException>( () => { throw new StubAssertionException(); } ) );
+            Assert.DoesNotThrow( () => AwesomeAssertThrows<Exception>( () => { throw new StubAssertionException(); } ) );
+
+            AwesomeAssertThrows<AssertionException>( () => { throw new AssertionException( String.Empty ); } );
+            AwesomeAssertThrows<AssertionException>( () => AwesomeAssertThrows<AssertionException>( () => { } ) );
+        }
+
+        class StubAssertionException : AssertionException
+        {
+            public StubAssertionException()
+                : base( String.Empty)
+            {
+            }
+        }
+
+        private void AwesomeAssertThrows<T>( Action test ) where T : Exception
+        {
+            Exception thrownException = null;
+            try
+            {
+                test();
+            }
+            catch( Exception ex )
+            {
+                thrownException = ex;
+            }
+
+            if( thrownException == null ) Assert.Fail( "There MUST be an ArgumentException!" );
+            if( !(thrownException is T) ) Assert.Fail( "Expected {0} but got a {1}!", typeof( T ).FullName, thrownException.GetType().FullName );
         } 
         
         #region Topo on lambda functions
