@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITI.Bottle", "ITI.Bottle\ITI.Bottle.csproj", "{7D90603E-27ED-4D11-B839-4619AC83B4CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0C551712-6F2C-4DD5-977E-E2F7A3251AB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITI.Bottle.Tests", "Tests\ITI.Bottle.Tests\ITI.Bottle.Tests.csproj", "{F382AC7D-24ED-4194-9ED1-6C7F04B38A4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40A3F618-650D-4B4F-BC9F-2DBBE6ABCBA1}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D90603E-27ED-4D11-B839-4619AC83B4CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D90603E-27ED-4D11-B839-4619AC83B4CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D90603E-27ED-4D11-B839-4619AC83B4CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D90603E-27ED-4D11-B839-4619AC83B4CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F382AC7D-24ED-4194-9ED1-6C7F04B38A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F382AC7D-24ED-4194-9ED1-6C7F04B38A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F382AC7D-24ED-4194-9ED1-6C7F04B38A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F382AC7D-24ED-4194-9ED1-6C7F04B38A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F382AC7D-24ED-4194-9ED1-6C7F04B38A4F} = {0C551712-6F2C-4DD5-977E-E2F7A3251AB2}
+	EndGlobalSection
+EndGlobal
