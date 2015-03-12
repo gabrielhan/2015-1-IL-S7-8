@@ -10,6 +10,7 @@ namespace ITI.Bottle
     {
         public static bool IsAssignableTo( this Type @this, Type y )
         {
+            if( y == null ) return false;
             return y.IsAssignableFrom( @this );
         }
     }

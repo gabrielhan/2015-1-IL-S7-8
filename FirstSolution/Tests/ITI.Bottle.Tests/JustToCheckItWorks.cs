@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using ITI.Bottle;
-using System.IO;
+using NUnit.Framework;
 
 namespace ITI.Bottle.Tests
 {
@@ -29,7 +29,6 @@ namespace ITI.Bottle.Tests
                 int b = 1500;
                 Assert.That( mc, Is.EqualTo( b ), "MaxCapacity MUST be correctly initialized." );
             }
-
         }
 
         [TestCase( -1 )]
@@ -48,7 +47,7 @@ namespace ITI.Bottle.Tests
             try
             {
                 //throw new FileNotFoundException();
-                //var b = new SimpleBottle( -1 );
+                var b = new SimpleBottle( -1 );
                 Assert.Fail( "There MUST be an ArgumentException!" );
             }
             catch( ArgumentException )
@@ -56,11 +55,10 @@ namespace ITI.Bottle.Tests
             }
             catch( Exception ex )
             {
-                // Lyskov Substitution Principle violation: 
+                // Lyskov Substitution Principle violation:
                 // if( ex.GetType() == typeof( AssertionException ) ) throw;
                 if( ex is AssertionException ) throw;
                 Assert.Fail( "Expected {0} but got a {1}!", "ArgumentException", ex.GetType().FullName );
-
             }
         }
 
@@ -171,11 +169,11 @@ namespace ITI.Bottle.Tests
         private void AssertThrows<T>( Action test ) where T : Exception
         {
             if( typeof( AssertionException ).IsAssignableFrom( typeof( T ) ) ) throw new ArgumentException( "T must NOT be an AssertionException!" );
-            
+
             if( TypeExtensions.IsAssignableTo( typeof( T ), typeof( AssertionException ) ) ) throw new ArgumentException( "T must NOT be an AssertionException!" );
-            
-            if( typeof(T).IsAssignableTo( typeof(AssertionException) ) ) throw new ArgumentException( "T must NOT be an AssertionException!" );
-            
+
+            if( typeof( T ).IsAssignableTo( typeof( AssertionException ) ) ) throw new ArgumentException( "T must NOT be an AssertionException!" );
+
             try
             {
                 test();
@@ -185,11 +183,12 @@ namespace ITI.Bottle.Tests
             {
                 if( ex is T ) return;
                 if( ex is AssertionException ) throw;
-                Assert.Fail( "Expected {0} but got a {1}!", typeof(T).Name, ex.GetType().FullName );
+                Assert.Fail( "Expected {0} but got a {1}!", typeof( T ).Name, ex.GetType().FullName );
             }
-        } 
-        
+        }
+
         #region Topo on lambda functions
+
         delegate void ActionInt( int i );
         delegate void ActionString( string i );
         delegate void ActionStringInt( string s, int i );
@@ -205,11 +204,15 @@ namespace ITI.Bottle.Tests
             Func<SimpleBottle> lf = () => new SimpleBottle( 500 );
             Func<SimpleBottle,string,SimpleBottle> lf2 = ( b, name ) => new SimpleBottle( 500 );
         }
-        #endregion
-        
 
+        #endregion Topo on lambda functions
 
+        [Test]
+        public void isAssignableTo_return_false_on_null_argument()
+        {
+            bool t = typeof( object ).IsAssignableTo( null );
 
-
+            Assert.False( t, "IsAssignableTo MUST return false on null parameter" );
+        }
     }
 }
