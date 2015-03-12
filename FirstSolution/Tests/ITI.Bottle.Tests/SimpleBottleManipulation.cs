@@ -55,5 +55,14 @@ namespace ITI.Bottle.Tests
             Assert.Throws<IndexOutOfRangeException>( () => list[1] = null );
         }
 
+        [Test]
+        public void optional_parameters()
+        {
+            ListSimpleBottle l = new ListSimpleBottle();
+            Assert.That( l.IndexOf( null ), Is.LessThan( 0 ) );
+            Assert.Throws<IndexOutOfRangeException>( () => l.IndexOf( item: null, count: 25 ) );
+            Assert.Throws<IndexOutOfRangeException>( () => l.IndexOf( count: 25, item: null ) );
+        }
+
     }
 }

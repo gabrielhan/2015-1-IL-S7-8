@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPushable.cs" />
+    <Compile Include="ITIList.cs" />
     <Compile Include="ListSimpleBottle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleBottle.cs" />

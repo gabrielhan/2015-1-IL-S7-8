@@ -20,6 +20,7 @@ namespace ITI.Bottle.Tests
         const int maxLoop = 100 * 1000;
 
         [Test]
+        [Explicit]
         public void simple_string_concatenation_performance()
         {
             Stopwatch w = new Stopwatch();
@@ -34,6 +35,7 @@ namespace ITI.Bottle.Tests
         }
 
         [Test]
+        [Explicit]
         public void better_simple_string_concatenation_performance()
         {
             Stopwatch w = new Stopwatch();
