@@ -46,7 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JustToCheckItWorks.cs" />
+    <Compile Include="MemoryStuff.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleBottleManipulation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
