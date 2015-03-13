@@ -46,6 +46,39 @@ namespace ITI.Bottle
             }
         }
 
+        public void Clear()
+        {
+            Array.Clear( _buckets, 0, _buckets.Length );
+            _count = 0;
+        }
+
+        public bool Remove( TKey key )
+        {
+            int idx = GetBucketIndex( key );
+            Node head = _buckets[idx];
+            if( head == null ) return false;
+            Node prev = null;
+            while( head != null )
+            {
+                if( head.Key.Equals( key ) )
+                {
+                    if( prev == null )
+                    {
+                        _buckets[idx] = head.Next;
+                    }
+                    else
+                    {
+                        prev.Next = head.Next;
+                    }
+                    --_count;
+                    return true;
+                }
+                prev = head;
+                head = head.Next;
+            }
+            return false;
+        }
+
         public void Add( TKey key, TValue value )
         {
             int idx = GetBucketIndex( key );
