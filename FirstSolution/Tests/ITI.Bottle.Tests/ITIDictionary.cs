@@ -37,12 +37,24 @@ namespace ITI.Bottle
                 if( found == null ) throw new KeyNotFoundException();
                 return found.Value;
             }
+            set
+            {
+                int idx = GetBucketIndex( key );
+                Node n = FindInBucket( idx, key );
+                if( n != null ) n.Value = value;
+                else DoAdd( key, value, idx );
+            }
         }
 
         public void Add( TKey key, TValue value )
         {
             int idx = GetBucketIndex( key );
             if( FindInBucket( idx, key ) != null ) throw new ArgumentException( "Key already exists!" );
+            DoAdd( key, value, idx );
+        }
+
+        void DoAdd( TKey key, TValue value, int idx )
+        {
             Node newOne = new Node( key, value );
             newOne.Next = _buckets[idx];
             _buckets[idx] = newOne;
