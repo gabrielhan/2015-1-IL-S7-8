@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DichotomicFinder.cs" />
+    <Compile Include="Enumeration.cs" />
     <Compile Include="ITIListTests.cs" />
     <Compile Include="JustToCheckItWorks.cs" />
     <Compile Include="MemoryStuff.cs" />

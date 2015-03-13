@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace ITI.Bottle
 {
-    public class ITIList<T>
+
+    public class ITIList<T> : IEnumerable<T>
     {
         T[] _tab;
         int _count;
+        int _version;
 
         public ITIList()
         {
@@ -32,7 +35,8 @@ namespace ITI.Bottle
             set 
             {
                 if( i >= _count ) throw new IndexOutOfRangeException();
-                _tab[i] = value; 
+                _tab[i] = value;
+                ++_version;
             }
         } 
         
@@ -46,6 +50,7 @@ namespace ITI.Bottle
                 Array.Resize( ref _tab, _tab.Length * 2 );
             }
             _tab[_count - 1] = b;
+            ++_version;
         }
 
         public void Add( params T[] item )
@@ -59,6 +64,7 @@ namespace ITI.Bottle
             int lenToCopy = --_count - i;
             if( lenToCopy > 0 ) Array.Copy( _tab, i + 1, _tab, i, lenToCopy );
             _tab[_count] = default(T);
+            ++_version;
         }
 
         /// <summary>
@@ -108,11 +114,70 @@ namespace ITI.Bottle
         }
 
 
-
-
         //public bool Remove( SimpleBottle b )
         //{
         //}
 
+        class E : IEnumerator<T>
+        {
+            readonly ITIList<T> _owner;
+            int _index;
+            int _originalVersion;
+            T _current;
+
+            public E( ITIList<T> owner )
+            {
+                _originalVersion = owner._version;
+                _owner = owner;
+                _index = -1;
+            }
+
+            public T Current
+            {
+                get 
+                {
+                    if( _index < 0 ) throw new InvalidOperationException();
+                    return _current; 
+                }
+            }
+
+            public bool MoveNext()
+            {
+                if( _owner._version != _originalVersion ) throw new InvalidOperationException( "The list has been modified." );
+                if( _index == -2 ) return false; 
+                if( ++_index >= _owner._count )
+                {
+                    _index = -2;
+                    return false;
+                }
+                _current = _owner._tab[_index];
+                return true;
+            }
+
+            public void Dispose()
+            {
+            }
+
+            object IEnumerator.Current
+            {
+                get { return Current; }
+            }
+
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return new E( this );
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }
