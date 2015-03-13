@@ -28,6 +28,11 @@ namespace ITI.Bottle
             _buckets = new Node[5];
         }
 
+        public int Count
+        {
+            get { return _count; }
+        }
+
         public TValue this[ TKey key ]
         {
             get
@@ -51,6 +56,25 @@ namespace ITI.Bottle
             Array.Clear( _buckets, 0, _buckets.Length );
             _count = 0;
         }
+
+        public bool ContainsKey( TKey key )
+        {
+            return FindInBucket( GetBucketIndex( key ), key ) != null;
+        }
+
+        public bool TryGetValue( TKey key, out TValue value )
+        {
+            Node n = FindInBucket( GetBucketIndex( key ), key );
+            if( n == null )
+            {
+                value = default( TValue );
+                return false;
+            }
+            value = n.Value;
+            return true;
+        }
+
+
 
         public bool Remove( TKey key )
         {

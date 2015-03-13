@@ -19,7 +19,7 @@ namespace ITI.Bottle.Tests
             d.Add( "key2", null );
             Assert.That( d.Count == 2 );
 
-            Assert.Throws<KeyNotFoundException>( () => d[ "keyKExistePas" ] ) );
+            Assert.Throws<KeyNotFoundException>( () => Console.Write( d[ "keyKExistePas" ] ) );
             // Adds or updates a key-value pair.
             d["key"] = 15.789;
             bool exist = d.ContainsKey( "key" );
@@ -37,8 +37,8 @@ namespace ITI.Bottle.Tests
             {
                 Assert.Fail( "Key k does not exist." );
             }
-            
-            foreach( KeyValuePair<TKey,TValue> e in d )
+
+            foreach( KeyValuePair<string,object> e in d )
             {
                 Console.WriteLine( "{0} -> {1}", e.Key, e.Value );
             }
