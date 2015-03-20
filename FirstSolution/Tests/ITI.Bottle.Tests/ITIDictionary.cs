@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ITI.Bottle
 {
-    public class ITIDictionary<TKey, TValue>
+    public class ITIDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey,TValue>>
     {
         class Node
         {
@@ -136,5 +136,54 @@ namespace ITI.Bottle
             return null;
         }
 
+        class E : IEnumerator<KeyValuePair<TKey, TValue>>
+        {
+            readonly ITIDictionary<TKey,TValue> _owner;
+            KeyValuePair<TKey, TValue> _current;
+            int _originalVersion;
+
+            int _idxBucket;
+            Node _node;
+
+            public E( ITIDictionary<TKey,TValue> owner )
+            {
+                _owner = owner;
+            }
+
+            public KeyValuePair<TKey, TValue> Current
+            {
+                get { return _current; }
+            }
+
+            public bool MoveNext()
+            {
+
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return _current; }
+            }
+
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            public void Dispose()
+            {
+            }
+
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return new E( this );
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }
