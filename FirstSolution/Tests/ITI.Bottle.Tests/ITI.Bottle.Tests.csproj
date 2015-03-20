@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="DichotomicFinder.cs" />
     <Compile Include="Enumeration.cs" />
-    <Compile Include="ITIDictionary.cs" />
     <Compile Include="ITIDictionaryTests.cs" />
     <Compile Include="ITIListTests.cs" />
     <Compile Include="JustToCheckItWorks.cs" />

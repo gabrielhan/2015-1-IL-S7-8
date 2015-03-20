@@ -75,5 +75,31 @@ namespace ITI.Bottle.Tests
             Assert.That( sumKey, Is.EqualTo( 1 + 2 + 3 + 4 + 5 ) );
             Assert.That( sumValue, Is.EqualTo( 10 + 20 + 30 + 40 + 50 ) );
         }
+
+        public void playing_with_enumerations()
+        {
+            // A storage for a Query string:
+            Dictionary<string,List<string>> qs = new Dictionary<string, List<string>>();
+            qs.Add( "q", new List<string>() { "1", "2", "3" } );
+            qs.Add( "name", new List<string>() { "John", "Paul", "Albert" } );
+            qs.Add( "weight", new List<string>() { "12", "87" } );
+            qs.Add( "plus", new List<string>() { "1" } );
+
+            // Want to extract KeyValuePair<string,string> from it.
+            foreach( KeyValuePair<string,string> parameters in qs.ExpandedParameters() )
+            {
+                // "plus" "1"
+                // "q" "1"
+                // "q" "2"
+                // "q" "2"
+                // "weight" "12"
+                // "weight" "87"
+                // "name" "John"
+                // "name" "Paul"
+                // "name" "Albert"
+            }
+
+        }
+
     }
 }

@@ -193,9 +193,22 @@ namespace ITI.Bottle
 
         }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumeratorHandMande()
         {
             return new E( this );
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            for( int i = 0; i < _buckets.Length; i++ )
+            {
+                Node n = _buckets[i];
+                while( n != null )
+                {
+                    yield return new KeyValuePair<TKey, TValue>( n.Key, n.Value );
+                    n = n.Next;
+                }
+            }
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
