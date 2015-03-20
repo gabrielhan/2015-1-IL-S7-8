@@ -76,6 +76,13 @@ namespace ITI.Bottle.Tests
             Assert.That( sumValue, Is.EqualTo( 10 + 20 + 30 + 40 + 50 ) );
         }
 
+        [Test]
+        public IEnumerable<int> FibonacciNumbers()
+        {
+
+        }
+
+        [Test]
         public void playing_with_enumerations()
         {
             // A storage for a Query string:
@@ -86,17 +93,49 @@ namespace ITI.Bottle.Tests
             qs.Add( "plus", new List<string>() { "1" } );
 
             // Want to extract KeyValuePair<string,string> from it.
-            foreach( KeyValuePair<string,string> parameters in qs.ExpandedParameters() )
+            foreach( KeyValuePair<string,string> parameters in qs.ExpandedValues() )
             {
+                Console.WriteLine( "{0} - {1}", parameters.Key, parameters.Value );
+                // "Hello!", "From ExpandedValues (string version)"
+
                 // "plus" "1"
                 // "q" "1"
                 // "q" "2"
-                // "q" "2"
+                // "q" "3"
                 // "weight" "12"
                 // "weight" "87"
                 // "name" "John"
                 // "name" "Paul"
                 // "name" "Albert"
+
+                // "Bye bye" "From ExpandedValues"
+            }
+
+        }
+
+        [Test]
+        public void playing_with_enumerations_and_generics()
+        {
+            // A storage for a Query string:
+            Dictionary<string,List<int>> qs = new Dictionary<string, List<int>>();
+            qs.Add( "q", new List<int>() { 1, 2, 3 } );
+            qs.Add( "name", new List<int>() { 4, 5, 6 } );
+            qs.Add( "weight", new List<int>() { 12, 87 } );
+            qs.Add( "plus", new List<int>() { 1 } );
+
+            // Want to extract KeyValuePair<string,int> from it.
+            foreach( KeyValuePair<string,int> parameters in qs.ExpandedValues() )
+            {
+                Console.WriteLine( "{0} - {1}", parameters.Key, parameters.Value );
+                // "plus" "1"
+                // "q" "1"
+                // "q" "2"
+                // "q" "3"
+                // "weight" "12"
+                // "weight" "87"
+                // "name" "4"
+                // "name" "5"
+                // "name" "6"
             }
 
         }

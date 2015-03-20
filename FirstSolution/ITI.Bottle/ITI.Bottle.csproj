@@ -45,6 +45,7 @@
     <Compile Include="ITIList.cs" />
     <Compile Include="ListSimpleBottle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryStrinExtensions.cs" />
     <Compile Include="SimpleBottle.cs" />
     <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
