@@ -4,8 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ITI.Bottle;
 
-namespace ITI.Bottle
+namespace ITI.Misc
 {
     public class ListSimpleBottle
     {

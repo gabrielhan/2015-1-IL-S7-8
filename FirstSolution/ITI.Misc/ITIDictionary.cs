@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace ITI.Bottle
+namespace ITI.Misc
 {
     public class ITIDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey,TValue>>
     {

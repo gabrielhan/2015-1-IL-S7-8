@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ITI.Bottle
+namespace ITI.Misc
 {
     public interface IPushable<T>
     {

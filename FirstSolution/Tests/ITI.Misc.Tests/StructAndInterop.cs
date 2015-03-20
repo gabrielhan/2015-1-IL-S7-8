@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace ITI.Bottle.Tests
+namespace ITI.Misc.Tests
 {
     [TestFixture]
     public class StructAndInterop

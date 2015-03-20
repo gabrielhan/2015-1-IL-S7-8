@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ITI.Bottle;
 using NUnit.Framework;
 
-namespace ITI.Bottle.Tests
+namespace ITI.Misc.Tests
 {
     [TestFixture]
     public class SimpleBottleManipulation
