@@ -51,6 +51,7 @@
     <Compile Include="ITIListTests.cs" />
     <Compile Include="JustToCheckItWorks.cs" />
     <Compile Include="MemoryStuff.cs" />
+    <Compile Include="PlayingWithEnumarations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleBottleManipulation.cs" />
   </ItemGroup>

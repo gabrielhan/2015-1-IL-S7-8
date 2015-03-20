@@ -76,11 +76,6 @@ namespace ITI.Bottle.Tests
             Assert.That( sumValue, Is.EqualTo( 10 + 20 + 30 + 40 + 50 ) );
         }
 
-        [Test]
-        public IEnumerable<int> FibonacciNumbers()
-        {
-
-        }
 
         [Test]
         public void playing_with_enumerations()
