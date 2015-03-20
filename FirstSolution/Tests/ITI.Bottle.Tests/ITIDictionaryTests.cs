@@ -44,5 +44,36 @@ namespace ITI.Bottle.Tests
             }
         }
 
+
+        [Test]
+        public void dictionary_enumerator_empty_works()
+        {
+            var d = new ITIDictionary<string, object>();
+            Assert.That( d.Count, Is.EqualTo( 0 ) );
+            foreach( var kv in d )
+            {
+                Assert.Fail( "Never here!!" );
+            }
+        }
+
+        [Test]
+        public void dictionary_enumerator_works()
+        {
+            var d = new ITIDictionary<int, int>();
+            d.Add( 1, 10 );
+            d.Add( 2, 20 );
+            d.Add( 3, 30 );
+            d.Add( 4, 40 );
+            d.Add( 5, 50 );
+            int sumKey = 0;
+            int sumValue = 0;
+            foreach( var kv in d )
+            {
+                sumKey += kv.Key;
+                sumValue += kv.Value;
+            }
+            Assert.That( sumKey, Is.EqualTo( 1 + 2 + 3 + 4 + 5 ) );
+            Assert.That( sumValue, Is.EqualTo( 10 + 20 + 30 + 40 + 50 ) );
+        }
     }
 }

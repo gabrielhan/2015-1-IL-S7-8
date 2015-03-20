@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -22,6 +23,7 @@ namespace ITI.Bottle
 
         Node[] _buckets;
         int _count;
+        int _version;
 
         public ITIDictionary()
         {
@@ -48,6 +50,7 @@ namespace ITI.Bottle
                 Node n = FindInBucket( idx, key );
                 if( n != null ) n.Value = value;
                 else DoAdd( key, value, idx );
+                ++_version;
             }
         }
 
@@ -55,6 +58,7 @@ namespace ITI.Bottle
         {
             Array.Clear( _buckets, 0, _buckets.Length );
             _count = 0;
+            ++_version;
         }
 
         public bool ContainsKey( TKey key )
@@ -95,6 +99,7 @@ namespace ITI.Bottle
                         prev.Next = head.Next;
                     }
                     --_count;
+                    ++_version;
                     return true;
                 }
                 prev = head;
@@ -116,6 +121,7 @@ namespace ITI.Bottle
             newOne.Next = _buckets[idx];
             _buckets[idx] = newOne;
             ++_count;
+            ++_version;
         }
 
         int GetBucketIndex( TKey key )
@@ -143,11 +149,13 @@ namespace ITI.Bottle
             int _originalVersion;
 
             int _idxBucket;
-            Node _node;
+            Node _nextNode;
 
             public E( ITIDictionary<TKey,TValue> owner )
             {
                 _owner = owner;
+                _idxBucket = -1;
+                _originalVersion = _owner._version;
             }
 
             public KeyValuePair<TKey, TValue> Current
@@ -157,7 +165,16 @@ namespace ITI.Bottle
 
             public bool MoveNext()
             {
-
+                if( _owner._version != _originalVersion ) throw new InvalidOperationException( "The dictionary has been modified." );
+                while( _nextNode == null )
+                {
+                    if( ++_idxBucket >= _owner._buckets.Length ) return false;
+                    _nextNode = _owner._buckets[_idxBucket];
+                }
+                Debug.Assert( _nextNode != null );
+                _current = new KeyValuePair<TKey, TValue>( _nextNode.Key, _nextNode.Value );
+                _nextNode = _nextNode.Next;
+                return true;
             }
 
             object System.Collections.IEnumerator.Current
