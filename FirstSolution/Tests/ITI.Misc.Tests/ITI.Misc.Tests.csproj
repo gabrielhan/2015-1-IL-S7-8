@@ -36,9 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +47,8 @@
     <Compile Include="ITIListTests.cs" />
     <Compile Include="JustToCheckItWorks.cs" />
     <Compile Include="MemoryStuff.cs" />
+    <Compile Include="MyLinq\MyLinq.cs" />
+    <Compile Include="MyLinq\MyLinqTests.cs" />
     <Compile Include="PlayingWithEnumarations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleBottleManipulation.cs" />
