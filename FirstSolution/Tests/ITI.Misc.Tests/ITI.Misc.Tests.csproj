@@ -54,6 +54,7 @@
     <Compile Include="SimpleBottleManipulation.cs" />
     <Compile Include="StructAndInterop.cs" />
     <Compile Include="ThreadingBasics.cs" />
+    <Compile Include="ThreadSafeCollections.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

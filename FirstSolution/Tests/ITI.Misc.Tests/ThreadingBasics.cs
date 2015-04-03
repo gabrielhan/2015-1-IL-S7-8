@@ -139,7 +139,7 @@ namespace ITI.Misc.Tests
                 Monitor.Enter( _lock );
                 try
                 {
-                    _counter += missed;
+                    _counter += missed - 1;
                 }
                 finally
                 {
