@@ -56,7 +56,7 @@ namespace ITI.Misc.Tests
             Thread[] threads = new Thread[8];
             for( int i = 0; i < threads.Length; i++ )
             {
-                threads[i] = new Thread( DoSomethingCompliated );
+                threads[i] = new Thread( DoSomethingComplicated );
             }
             _counter = 0;
             for( int i = 0; i < threads.Length; i++ )
@@ -77,22 +77,22 @@ namespace ITI.Misc.Tests
         public void How_to_shoot_yourself_in_the_foot()
         {
             _counter = 0;
-            ThreadPool.QueueUserWorkItem( DoSomethingCompliated );
-            ThreadPool.QueueUserWorkItem( DoSomethingCompliated );
-            ThreadPool.QueueUserWorkItem( DoSomethingCompliated );
-            ThreadPool.QueueUserWorkItem( DoSomethingCompliated );
-            ThreadPool.QueueUserWorkItem( DoSomethingCompliated );
-            ThreadPool.QueueUserWorkItem( DoSomethingCompliated );
-            ThreadPool.QueueUserWorkItem( DoSomethingCompliated );
-            ThreadPool.QueueUserWorkItem( DoSomethingCompliated );
-            DoSomethingCompliated( null );
+            ThreadPool.QueueUserWorkItem( DoSomethingComplicated );
+            ThreadPool.QueueUserWorkItem( DoSomethingComplicated );
+            ThreadPool.QueueUserWorkItem( DoSomethingComplicated );
+            ThreadPool.QueueUserWorkItem( DoSomethingComplicated );
+            ThreadPool.QueueUserWorkItem( DoSomethingComplicated );
+            ThreadPool.QueueUserWorkItem( DoSomethingComplicated );
+            ThreadPool.QueueUserWorkItem( DoSomethingComplicated );
+            ThreadPool.QueueUserWorkItem( DoSomethingComplicated );
+            DoSomethingComplicated( null );
 
             Thread.Sleep( 5000 );
             Console.WriteLine( "Should be over!" );
             Assert.That( _counter, Is.EqualTo( 9 * 10000 ) );
         }
 
-        void DoSomethingCompliated( object o )
+        void DoSomethingComplicated( object o )
         {
             for( int i = 0; i < 10000; i++ )
             {
