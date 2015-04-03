@@ -53,13 +53,19 @@ namespace ITI.Misc.Tests
         [Test]
         public void Counter_with_lock()
         {
-            ParallelExecute( DoSomethingComplicatedWithLock, 500*1000 );
+            ParallelExecute( DoSomethingComplicatedWithLock, 2*1000*1000 );
+        }
+
+        [Test]
+        public void Counter_with_lock_WithMonitor()
+        {
+            ParallelExecute( DoSomethingComplicatedWithMonitor, 2*1000*1000 );
         }
 
         [Test]
         public void Counter_with_interlocked_increment()
         {
-            ParallelExecute( DoSomethingComplicatedWithIncrement, 500*1000 );
+            ParallelExecute( DoSomethingComplicatedWithIncrement, 2*1000*1000 );
         }
 
         void ParallelExecute( ParameterizedThreadStart start, object startParam )
@@ -106,10 +112,11 @@ namespace ITI.Misc.Tests
 
         public void DoSomethingComplicatedWithMonitor( object o )
         {
+            int missedCount = 0;
             int missed = 1;
-            for( int i = 0; i < 10000; i++ )
+            for( int i = 0; i < (int)o; i++ )
             {
-                if( Monitor.TryEnter( _lock, 50 ) )
+                if( Monitor.TryEnter( _lock, 0 ) )
                 {
                     try
                     {
@@ -121,7 +128,11 @@ namespace ITI.Misc.Tests
                         Monitor.Exit( _lock );
                     }
                 }
-                else missed++;
+                else
+                {
+                    missed++;
+                    missedCount++;
+                }
             }
             if( missed > 1 )
             {
@@ -135,7 +146,7 @@ namespace ITI.Misc.Tests
                     Monitor.Exit( _lock );
                 }
             }
-            Console.WriteLine( "Thread : {0} is over.", Thread.CurrentThread.Name );
+            Console.WriteLine( "Thread : {0} is over. MissedCount = {1}", Thread.CurrentThread.Name, missedCount );
         }
 
         [Test]
