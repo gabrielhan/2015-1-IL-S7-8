@@ -16,6 +16,9 @@ namespace ITI.Misc.Tests
         [Test]
         public void reading_a_file()
         {
+            var bytes = Encoding.Unicode.GetBytes( "BonالموJMam" );
+            var bytesUTF8 = Encoding.UTF8.GetBytes( "BonالموJMam" ); 
+
             using( var s = new FileStream( fileToRead, FileMode.Open, FileAccess.Read, FileShare.None ) )
             {
                 Assert.That( s.CanRead );

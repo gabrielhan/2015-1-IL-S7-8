@@ -18,13 +18,13 @@ namespace ITI.Misc
     {
         readonly Stream _stream;
         readonly KrabouilleMode _mode;
-        string _passPhrase;
+        byte[] _cryptData;
 
         public KrabouilleStream( Stream s, KrabouilleMode mode, string passPhrase )
         {
             _stream = s;
             _mode = mode;
-            _passPhrase = passPhrase;
+            _cryptData = Encoding.UTF8.GetBytes( passPhrase ); 
         }
 
         public override bool CanRead
