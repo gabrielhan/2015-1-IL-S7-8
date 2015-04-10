@@ -52,6 +52,7 @@
     <Compile Include="PlayingWithEnumarations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleBottleManipulation.cs" />
+    <Compile Include="StreamManipulation.cs" />
     <Compile Include="StructAndInterop.cs" />
     <Compile Include="ThreadingBasics.cs" />
     <Compile Include="ThreadSafeCollections.cs" />
@@ -68,6 +69,9 @@
       <Project>{46a22754-12a2-479a-b3ee-4ca64a216a15}</Project>
       <Name>ITI.Misc</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
