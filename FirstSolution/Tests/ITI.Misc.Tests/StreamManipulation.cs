@@ -84,7 +84,7 @@ namespace ITI.Misc.Tests
         [Test]
         public void krabouille_and_dekrabouille()
         {
-            Random r = new Random();
+            Random r = new Random( 3712 );
             byte[] buffer = new byte[64];
 
             using( var input = new FileStream( fileToRead, FileMode.Open, FileAccess.Read, FileShare.None ) )
@@ -108,10 +108,17 @@ namespace ITI.Misc.Tests
 
         static void CopyToRandomized( Random random, byte[] buffer, Stream input, Stream output )
         {
+            int offset = random.Next( buffer.Length - 1 );
+            int len = random.Next( buffer.Length - offset ) + 1;
             int lenRead;
-            while( (lenRead = input.Read( buffer, 0, random.Next( buffer.Length ) + 1 )) > 0 )
+            while( (lenRead = input.Read( buffer, offset, len )) > 0 )
             {
-                output.Write( buffer, 0, lenRead );
+                Assert.That( offset >= 0 && len >= 1 && offset + len <= buffer.Length );
+
+                output.Write( buffer, offset, lenRead );
+                
+                offset = random.Next( buffer.Length - 1 );
+                len = random.Next( buffer.Length - offset ) + 1;
             }
         }
     }

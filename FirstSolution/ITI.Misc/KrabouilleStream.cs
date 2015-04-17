@@ -23,11 +23,14 @@ namespace ITI.Misc
         int _currentCryptDataIndex;
         readonly Random _random;
 
+        const double _saltRate = 1.0;
+
         public KrabouilleStream( Stream s, KrabouilleMode mode, string passPhrase )
         {
             _stream = s;
             _mode = mode;
             _cryptData = Encoding.UTF8.GetBytes( passPhrase );
+            // DO NOT USE GetHashCode: it is not stable!
             _random = new Random( passPhrase.GetHashCode() );
         }
 
@@ -62,12 +65,14 @@ namespace ITI.Misc
             set { throw new NotSupportedException(); }
         }
 
+        bool _isSaltPreview;
+
         public override int Read( byte[] buffer, int offset, int count )
         {
             if( _mode == KrabouilleMode.Krabouille ) throw new InvalidOperationException();
 
+            int bufferLimit = offset + count;
             int totalLenRead = 0;
-            int totalSaltCount = 0;
             int saltCount = count;
             for(;;)
             {
@@ -75,6 +80,17 @@ namespace ITI.Misc
                 saltCount = 0;
                 for( int i = 0; i < lenRead; ++i )
                 {
+                    if( !_isSaltPreview )
+                    {
+                        if( _random.NextDouble() < _saltRate )
+                        {
+                            _random.Next();
+                            _isSaltPreview = true;
+                            ++saltCount;
+                        }
+                    }
+                    if( (offset + i + saltCount) >= bufferLimit ) break;
+                    _isSaltPreview = false;
                     var b = buffer[offset + i + saltCount];
                     buffer[offset + i] = (byte)(b ^ _cryptData[_currentCryptDataIndex]);
                     if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
@@ -82,19 +98,13 @@ namespace ITI.Misc
                     {
                         _cryptData[_currentCryptDataIndex] += b;
                     }
-                    if( _random.NextDouble() < 0.02 )
-                    {
-                        _random.Next();
-                        ++saltCount;
-                    }
                 }
-                if( saltCount == 0 ) break;
-                totalSaltCount += saltCount;
                 lenRead -= saltCount;
                 totalLenRead += lenRead;
+                if( saltCount == 0 ) break;
                 offset += lenRead;
             }
-            return totalLenRead;
+            return count;
         }
 
         byte[] _localBuffer = new byte[256];
@@ -120,20 +130,21 @@ namespace ITI.Misc
             int writtenCount = 0;
             for( int i = 0; i < count; ++i )
             {
+                // Salt
+                if( _random.NextDouble() < _saltRate )
+                {
+                    var saved = _localBuffer[i];
+                    _localBuffer[i] = (byte)_random.Next();
+                    _localBuffer[i] = 255;
+                    _stream.Write( _localBuffer, writtenCount, i + 1 - writtenCount );
+                    writtenCount = i;
+                    _localBuffer[i] = saved;
+                }
                 var b = _localBuffer[i] ^= _cryptData[_currentCryptDataIndex];
                 if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
                 unchecked
                 {
                     _cryptData[_currentCryptDataIndex] += b;
-                }
-                // Salt
-                if( _random.NextDouble() < 0.02 )
-                {
-                    var saved = _localBuffer[i + 1];
-                    _localBuffer[i + 1] = (byte)_random.Next();
-                    _stream.Write( _localBuffer, writtenCount, i + 2 - writtenCount );
-                    writtenCount = i + 1;
-                    _localBuffer[i + 1] = saved;
                 }
             }
             _stream.Write( _localBuffer, writtenCount, count - writtenCount );
