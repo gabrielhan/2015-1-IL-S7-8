@@ -181,3 +181,8 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+FirstSolution/Tests/ITI.Misc.Tests/StreamManipulation.cs.ccopy
+FirstSolution/Tests/ITI.Misc.Tests/StreamManipulation.cs.clear
+FirstSolution/Tests/ITI.Misc.Tests/StreamManipulation.cs.copy
+FirstSolution/Tests/ITI.Misc.Tests/StreamManipulation.cs.decopy
+FirstSolution/Tests/ITI.Misc.Tests/StreamManipulation.cs.krab
