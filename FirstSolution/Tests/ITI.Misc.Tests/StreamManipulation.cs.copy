@@ -84,35 +84,21 @@ namespace ITI.Misc.Tests
         [Test]
         public void krabouille_and_dekrabouille()
         {
-            Random r = new Random();
-            byte[] buffer = new byte[64];
-
             using( var input = new FileStream( fileToRead, FileMode.Open, FileAccess.Read, FileShare.None ) )
             using( var output = new FileStream( fileToRead + ".krab", FileMode.Create, FileAccess.Write, FileShare.None ) )
             using( var krab = new KrabouilleStream( output, KrabouilleMode.Krabouille, "Super Mot de Passe" ) )
             {
-                //input.CopyTo( krab );
-                CopyToRandomized( r, buffer, input, krab );
+                input.CopyTo( krab );
             }
             using( var fileInput = new FileStream( fileToRead + ".krab", FileMode.Open, FileAccess.Read, FileShare.None ) )
             using( var input = new KrabouilleStream( fileInput, KrabouilleMode.Dekrabouille, "Super Mot de Passe" ) )
             using( var output = new FileStream( fileToRead + ".clear", FileMode.Create, FileAccess.Write, FileShare.None ) )
             {
-                //input.CopyTo( output );
-                CopyToRandomized( r, buffer, input, output );
+                input.CopyTo( output );
             }
             FileAssert.AreNotEqual( fileToRead, fileToRead + ".krab" );
             FileAssert.AreEqual( fileToRead, fileToRead + ".clear" );
         }
 
-
-        static void CopyToRandomized( Random random, byte[] buffer, Stream input, Stream output )
-        {
-            int lenRead;
-            while( (lenRead = input.Read( buffer, 0, random.Next( buffer.Length ) + 1 )) > 0 )
-            {
-                output.Write( buffer, 0, lenRead );
-            }
-        }
     }
 }

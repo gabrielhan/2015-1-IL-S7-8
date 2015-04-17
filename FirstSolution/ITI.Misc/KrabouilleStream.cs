@@ -20,12 +20,14 @@ namespace ITI.Misc
         readonly KrabouilleMode _mode;
         byte[] _cryptData;
         int _currentCryptDataIndex;
+        readonly Random _random;
 
         public KrabouilleStream( Stream s, KrabouilleMode mode, string passPhrase )
         {
             _stream = s;
             _mode = mode;
-            _cryptData = Encoding.UTF8.GetBytes( passPhrase ); 
+            _cryptData = Encoding.UTF8.GetBytes( passPhrase );
+            _random = new Random( passPhrase.GetHashCode() );
         }
 
         public override bool CanRead
@@ -62,11 +64,13 @@ namespace ITI.Misc
         public override int Read( byte[] buffer, int offset, int count )
         {
             if( _mode == KrabouilleMode.Krabouille ) throw new InvalidOperationException();
+            
             int lenRead = _stream.Read( buffer, offset, count );
             for( int i = 0; i < lenRead; ++i )
             {
                 var b = buffer[offset + i];
-                buffer[offset + i] = (byte)(b ^ _cryptData[_currentCryptDataIndex]);
+                //buffer[offset + i] = (byte)(b ^ _cryptData[_currentCryptDataIndex]);
+                buffer[offset + i] ^= _cryptData[_currentCryptDataIndex];
                 if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
                 unchecked
                 {
@@ -79,9 +83,10 @@ namespace ITI.Misc
         public override void Write( byte[] buffer, int offset, int count )
         {
             if( _mode == KrabouilleMode.Dekrabouille ) throw new InvalidOperationException();
+
             for( int i = 0; i < count; ++i )
             {
-                var b = buffer[offset + i] ^= _cryptData[ _currentCryptDataIndex ];
+                var b = buffer[offset + i] ^= _cryptData[_currentCryptDataIndex];
                 if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
                 unchecked
                 {
