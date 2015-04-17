@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -64,36 +65,78 @@ namespace ITI.Misc
         public override int Read( byte[] buffer, int offset, int count )
         {
             if( _mode == KrabouilleMode.Krabouille ) throw new InvalidOperationException();
-            
-            int lenRead = _stream.Read( buffer, offset, count );
-            for( int i = 0; i < lenRead; ++i )
+
+            int totalLenRead = 0;
+            int totalSaltCount = 0;
+            int saltCount = count;
+            for(;;)
             {
-                var b = buffer[offset + i];
-                //buffer[offset + i] = (byte)(b ^ _cryptData[_currentCryptDataIndex]);
-                buffer[offset + i] ^= _cryptData[_currentCryptDataIndex];
-                if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
-                unchecked
+                int lenRead = _stream.Read( buffer, offset, saltCount );
+                saltCount = 0;
+                for( int i = 0; i < lenRead; ++i )
                 {
-                    _cryptData[_currentCryptDataIndex] += b;
+                    var b = buffer[offset + i + saltCount];
+                    buffer[offset + i] = (byte)(b ^ _cryptData[_currentCryptDataIndex]);
+                    if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
+                    unchecked
+                    {
+                        _cryptData[_currentCryptDataIndex] += b;
+                    }
+                    if( _random.NextDouble() < 0.02 )
+                    {
+                        _random.Next();
+                        ++saltCount;
+                    }
                 }
+                if( saltCount == 0 ) break;
+                totalSaltCount += saltCount;
+                lenRead -= saltCount;
+                totalLenRead += lenRead;
+                offset += lenRead;
             }
-            return lenRead;
+            return totalLenRead;
         }
+
+        byte[] _localBuffer = new byte[256];
 
         public override void Write( byte[] buffer, int offset, int count )
         {
             if( _mode == KrabouilleMode.Dekrabouille ) throw new InvalidOperationException();
 
+            while( count > 0 )
+            {
+                int len = Math.Min( count, _localBuffer.Length-1 );
+                Array.Copy( buffer, offset, _localBuffer, 0, len );
+                offset += len;
+                count -= len;
+                WriteLocalBuffer( len );
+            }
+            WriteLocalBuffer( count );
+        }
+
+        private void WriteLocalBuffer( int count )
+        {
+            Debug.Assert( count < _localBuffer.Length );
+            int writtenCount = 0;
             for( int i = 0; i < count; ++i )
             {
-                var b = buffer[offset + i] ^= _cryptData[_currentCryptDataIndex];
+                var b = _localBuffer[i] ^= _cryptData[_currentCryptDataIndex];
                 if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
                 unchecked
                 {
                     _cryptData[_currentCryptDataIndex] += b;
                 }
+                // Salt
+                if( _random.NextDouble() < 0.02 )
+                {
+                    var saved = _localBuffer[i + 1];
+                    _localBuffer[i + 1] = (byte)_random.Next();
+                    _stream.Write( _localBuffer, writtenCount, i + 2 - writtenCount );
+                    writtenCount = i + 1;
+                    _localBuffer[i + 1] = saved;
+                }
             }
-            _stream.Write( buffer, offset, count );
+            _stream.Write( _localBuffer, writtenCount, count - writtenCount );
         }
 
         public override long Seek( long offset, SeekOrigin origin )
