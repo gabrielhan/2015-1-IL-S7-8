@@ -65,8 +65,13 @@ namespace ITI.Misc
             int lenRead = _stream.Read( buffer, offset, count );
             for( int i = 0; i < lenRead; ++i )
             {
-                buffer[offset + i] ^= _cryptData[ _currentCryptDataIndex ];
+                var b = buffer[offset + i];
+                buffer[offset + i] = (byte)(b ^ _cryptData[_currentCryptDataIndex]);
                 if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
+                unchecked
+                {
+                    _cryptData[_currentCryptDataIndex] += b;
+                }
             }
             return lenRead;
         }
@@ -76,8 +81,12 @@ namespace ITI.Misc
             if( _mode == KrabouilleMode.Dekrabouille ) throw new InvalidOperationException();
             for( int i = 0; i < count; ++i )
             {
-                buffer[offset + i] ^= _cryptData[ _currentCryptDataIndex ];
+                var b = buffer[offset + i] ^= _cryptData[ _currentCryptDataIndex ];
                 if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
+                unchecked
+                {
+                    _cryptData[_currentCryptDataIndex] += b;
+                }
             }
             _stream.Write( buffer, offset, count );
         }
