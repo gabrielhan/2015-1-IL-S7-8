@@ -29,59 +29,52 @@ namespace ITI.Misc
 
         public override bool CanRead
         {
-            get { throw new NotImplementedException(); }
+            get { return _mode == KrabouilleMode.Dekrabouille; }
         }
 
         public override bool CanSeek
         {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
 
         public override bool CanWrite
         {
-            get { throw new NotImplementedException(); }
+            get { return _mode == KrabouilleMode.Krabouille; }
         }
 
         public override void Flush()
         {
-            throw new NotImplementedException();
+            _stream.Flush();
         }
 
         public override long Length
         {
-            get { throw new NotImplementedException(); }
+            get { throw new NotSupportedException(); }
         }
 
         public override long Position
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { throw new NotSupportedException(); }
+            set { throw new NotSupportedException(); }
         }
 
         public override int Read( byte[] buffer, int offset, int count )
         {
-            throw new NotImplementedException();
-        }
-
-        public override long Seek( long offset, SeekOrigin origin )
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void SetLength( long value )
-        {
-            throw new NotImplementedException();
         }
 
         public override void Write( byte[] buffer, int offset, int count )
         {
-            throw new NotImplementedException();
         }
+
+        public override long Seek( long offset, SeekOrigin origin )
+        {
+            throw new NotSupportedException();
+        }
+
+        public override void SetLength( long value )
+        {
+            throw new NotSupportedException();
+        }
+
     }
 }
