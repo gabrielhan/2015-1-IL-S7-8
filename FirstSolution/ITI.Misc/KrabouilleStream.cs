@@ -19,6 +19,7 @@ namespace ITI.Misc
         readonly Stream _stream;
         readonly KrabouilleMode _mode;
         byte[] _cryptData;
+        int _currentCryptDataIndex;
 
         public KrabouilleStream( Stream s, KrabouilleMode mode, string passPhrase )
         {
@@ -60,10 +61,25 @@ namespace ITI.Misc
 
         public override int Read( byte[] buffer, int offset, int count )
         {
+            if( _mode == KrabouilleMode.Krabouille ) throw new InvalidOperationException();
+            int lenRead = _stream.Read( buffer, offset, count );
+            for( int i = 0; i < lenRead; ++i )
+            {
+                buffer[offset + i] ^= _cryptData[ _currentCryptDataIndex ];
+                if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
+            }
+            return lenRead;
         }
 
         public override void Write( byte[] buffer, int offset, int count )
         {
+            if( _mode == KrabouilleMode.Dekrabouille ) throw new InvalidOperationException();
+            for( int i = 0; i < count; ++i )
+            {
+                buffer[offset + i] ^= _cryptData[ _currentCryptDataIndex ];
+                if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
+            }
+            _stream.Write( buffer, offset, count );
         }
 
         public override long Seek( long offset, SeekOrigin origin )
