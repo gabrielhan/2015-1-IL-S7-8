@@ -74,12 +74,20 @@ namespace ITI.Misc
             int bufferLimit = offset + count;
             int totalLenRead = 0;
             int saltCount = count;
-            for(;;)
+            bool firstPass = true;
+            for( ; ; )
             {
                 int lenRead = _stream.Read( buffer, offset, saltCount );
+                if( firstPass )
+                {
+                    if( lenRead < count )
+                        bufferLimit = offset + lenRead;
+                    firstPass = false;
+                }
                 saltCount = 0;
                 for( int i = 0; i < lenRead; ++i )
                 {
+                    if( (offset + i + saltCount) >= bufferLimit ) break;
                     if( !_isSaltPreview )
                     {
                         if( _random.NextDouble() < _saltRate )
@@ -104,7 +112,7 @@ namespace ITI.Misc
                 if( saltCount == 0 ) break;
                 offset += lenRead;
             }
-            return count;
+            return totalLenRead;
         }
 
         byte[] _localBuffer = new byte[256];
@@ -115,7 +123,7 @@ namespace ITI.Misc
 
             while( count > 0 )
             {
-                int len = Math.Min( count, _localBuffer.Length-1 );
+                int len = Math.Min( count, _localBuffer.Length - 1 );
                 Array.Copy( buffer, offset, _localBuffer, 0, len );
                 offset += len;
                 count -= len;
@@ -159,6 +167,5 @@ namespace ITI.Misc
         {
             throw new NotSupportedException();
         }
-
     }
 }
