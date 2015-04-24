@@ -35,12 +35,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animals.cs" />
+    <Compile Include="BinarySerializationSample.cs" />
     <Compile Include="DichotomicFinder.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="ITIDictionaryTests.cs" />
@@ -51,6 +53,8 @@
     <Compile Include="MyLinq\MyLinqTests.cs" />
     <Compile Include="PlayingWithEnumarations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializationTestsAutonomousV2.cs" />
+    <Compile Include="SerializationTests.cs" />
     <Compile Include="SimpleBottleManipulation.cs" />
     <Compile Include="StreamManipulation.cs" />
     <Compile Include="StructAndInterop.cs" />
