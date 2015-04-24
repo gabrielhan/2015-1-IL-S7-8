@@ -70,16 +70,18 @@ namespace ITI.Misc
         public override int Read( byte[] buffer, int offset, int count )
         {
             if( _mode == KrabouilleMode.Krabouille ) throw new InvalidOperationException();
-
             int bufferLimit = offset + count;
             int totalLenRead = 0;
             int saltCount = count;
-            for(;;)
+            for( ; ; )
             {
                 int lenRead = _stream.Read( buffer, offset, saltCount );
+                if( totalLenRead + lenRead < count )
+                    bufferLimit = offset + lenRead;
                 saltCount = 0;
                 for( int i = 0; i < lenRead; ++i )
                 {
+                    if( (offset + i + saltCount) >= bufferLimit ) break;
                     if( !_isSaltPreview )
                     {
                         if( _random.NextDouble() < _saltRate )
@@ -89,11 +91,7 @@ namespace ITI.Misc
                             ++saltCount;
                         }
                     }
-                    if( (offset + i + saltCount) >= bufferLimit )
-                    {
-                        --saltCount;
-                        break;
-                    }
+                    if( (offset + i + saltCount) >= bufferLimit ) break;
                     _isSaltPreview = false;
                     _cryptData[_currentCryptDataIndex] = 0;
                     var b = buffer[offset + i + saltCount];
@@ -120,7 +118,7 @@ namespace ITI.Misc
 
             while( count > 0 )
             {
-                int len = Math.Min( count, _localBuffer.Length-1 );
+                int len = Math.Min( count, _localBuffer.Length - 1 );
                 Array.Copy( buffer, offset, _localBuffer, 0, len );
                 offset += len;
                 count -= len;
@@ -165,6 +163,5 @@ namespace ITI.Misc
         {
             throw new NotSupportedException();
         }
-
     }
 }
