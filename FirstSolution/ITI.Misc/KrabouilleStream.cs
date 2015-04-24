@@ -89,8 +89,13 @@ namespace ITI.Misc
                             ++saltCount;
                         }
                     }
-                    if( (offset + i + saltCount) >= bufferLimit ) break;
+                    if( (offset + i + saltCount) >= bufferLimit )
+                    {
+                        --saltCount;
+                        break;
+                    }
                     _isSaltPreview = false;
+                    _cryptData[_currentCryptDataIndex] = 0;
                     var b = buffer[offset + i + saltCount];
                     buffer[offset + i] = (byte)(b ^ _cryptData[_currentCryptDataIndex]);
                     if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
@@ -104,7 +109,7 @@ namespace ITI.Misc
                 if( saltCount == 0 ) break;
                 offset += lenRead;
             }
-            return count;
+            return totalLenRead;
         }
 
         byte[] _localBuffer = new byte[256];
@@ -140,6 +145,7 @@ namespace ITI.Misc
                     writtenCount = i;
                     _localBuffer[i] = saved;
                 }
+                _cryptData[_currentCryptDataIndex] = 0;
                 var b = _localBuffer[i] ^= _cryptData[_currentCryptDataIndex];
                 if( ++_currentCryptDataIndex == _cryptData.Length ) _currentCryptDataIndex = 0;
                 unchecked
