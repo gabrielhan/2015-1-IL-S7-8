@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,12 @@ namespace ITI.Parser
         public Node Condition { get; private set; }
         public Node WhenTrue { get; private set; }
         public Node WhenFalse { get; private set; }
+
+        [DebuggerStepThrough]
+        internal override void Accept( NodeVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
 
     }
 }

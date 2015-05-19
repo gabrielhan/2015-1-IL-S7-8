@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,12 @@ namespace ITI.Parser
         public TokenType OperatorType { get; private set; }
         public Node Left { get; private set; }
         public Node Right { get; private set; }
+
+        [DebuggerStepThrough]
+        internal override void Accept( NodeVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
 
         public override string ToString()
         {

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ITI.Parser
 {
-    public abstract class Node
+    public class EvalVisitor : NodeVisitor
     {
 
-        internal abstract void Accept( NodeVisitor visitor );
     }
 }
