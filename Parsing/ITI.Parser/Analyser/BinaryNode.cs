@@ -20,5 +20,18 @@ namespace ITI.Parser
         public Node Left { get; private set; }
         public Node Right { get; private set; }
 
+        public override string ToString()
+        {
+            string op = null;
+            switch( OperatorType )
+            {
+                case TokenType.Div: op = " / "; break;
+                case TokenType.Mult: op = " * "; break;
+                case TokenType.Plus: op = " + "; break;
+                case TokenType.Minus: op = " - "; break;
+            }
+            return "(" + Left.ToString() + op + Right.ToString() + ")";
+        }
+
     }
 }
