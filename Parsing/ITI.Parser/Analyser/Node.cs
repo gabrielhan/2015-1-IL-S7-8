@@ -12,3 +12,13 @@ namespace ITI.Parser
         internal abstract void Accept( NodeVisitor visitor );
     }
 }
+
+
+namespace gaby.Parser
+{
+    public abstract class Node
+    {
+
+        internal abstract void Accept(NodeVisitor visitor);
+    }
+}

@@ -53,3 +53,55 @@ namespace ITI.Parser.Tests
         
     }
 }
+
+
+namespace gaby.Parser.Tests
+{
+    using gaby.Parser;
+
+    [TestFixture]
+    public class AnalyserTests
+    {
+
+        [Test]
+        public void simple_factors()
+        {
+            var a = new Analyser();
+            var node = a.Analyse(new StringTokenizer("8*12/5*12"));
+            Assert.That(node.ToString(), Is.EqualTo("(((8 * 12) / 5) * 12)"));
+        }
+
+        [Test]
+        public void factors_with_addition()
+        {
+            var a = new Analyser();
+            var node = a.Analyse(new StringTokenizer("8+12*12"));
+            Assert.That(node.ToString(), Is.EqualTo("(8 + (12 * 12))"));
+        }
+
+        [Test]
+        public void factors_with_minus()
+        {
+            var a = new Analyser();
+            var node = a.Analyse(new StringTokenizer("8-12*12+5"));
+            Assert.That(node.ToString(), Is.EqualTo("((8 - (12 * 12)) + 5)"));
+        }
+
+        [Test]
+        public void addition_and_factors()
+        {
+            var a = new Analyser();
+            var node = a.Analyse(new StringTokenizer("8*12+12"));
+            Assert.That(node.ToString(), Is.EqualTo("((8 * 12) + 12)"));
+        }
+
+        [Test]
+        public void unary_minus_at_work()
+        {
+            var a = new Analyser();
+            var node = a.Analyse(new StringTokenizer("12*-7"));
+            Assert.That(node.ToString(), Is.EqualTo("(12 * -(7))"));
+        }
+
+    }
+}

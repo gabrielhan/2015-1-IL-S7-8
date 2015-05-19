@@ -28,3 +28,28 @@ namespace ITI.Parser
 
     }
 }
+
+
+namespace gaby.Parser
+{
+    public class IfNode : Node
+    {
+        public IfNode(Node condition, Node whenTrue, Node whenFalse)
+        {
+            Condition = condition;
+            WhenTrue = whenTrue;
+            WhenFalse = whenFalse;
+        }
+
+        public Node Condition { get; private set; }
+        public Node WhenTrue { get; private set; }
+        public Node WhenFalse { get; private set; }
+
+        [DebuggerStepThrough]
+        internal override void Accept(NodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+    }
+}

@@ -12,3 +12,13 @@ namespace ITI.Parser
         public double Result { get; set; }
     }
 }
+
+
+namespace gaby.Parser
+{
+    public class EvalVisitor : NodeVisitor
+    {
+
+        public double Result { get; set; }
+    }
+}
