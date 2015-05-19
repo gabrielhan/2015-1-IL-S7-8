@@ -9,5 +9,6 @@ namespace ITI.Parser
     public class EvalVisitor : NodeVisitor
     {
 
+        public double Result { get; set; }
     }
 }

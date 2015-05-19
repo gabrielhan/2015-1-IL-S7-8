@@ -52,10 +52,10 @@ namespace ITI.Parser
         {
             double numberValue;
             if( _tokenizer.MatchDouble( out numberValue ) ) return new ConstantNode( numberValue );
-            if( _tokenizer.CurrentToken == TokenType.OpenPar )
+            if( _tokenizer.Match( TokenType.OpenPar ) )
             {
                 var e = HandleExpression();
-                if( _tokenizer.CurrentToken != TokenType.ClosePar ) return new ErrorNode( "Expected )." );
+                if( !_tokenizer.Match( TokenType.ClosePar ) ) return new ErrorNode( "Expected )." );
                 return e;
             }
             return new ErrorNode( "Expected number or (expression)." );
