@@ -165,3 +165,205 @@ namespace ITI.Misc
         }
     }
 }
+
+
+
+
+namespace gaby.Misc
+{
+
+    public enum KrabouilleMode
+    {
+        Krabouille,
+        Dekrabouille
+    }
+
+
+    public class KrabouilleStream : Stream
+    {
+        readonly Stream _stream;
+        readonly KrabouilleMode _mode;
+        int _jcount;
+        readonly Random _randy;
+        readonly byte[] _pwByte;
+        int _salt;
+        int _buffersize;
+
+
+        public KrabouilleStream(Stream s, KrabouilleMode mode, string passPhrase)
+        {
+
+            _stream = s;
+            _mode = mode;
+            _jcount = 0;
+            _randy = new Random(hashy(passPhrase));
+            // todo hashy
+            _pwByte = Encoding.UTF8.GetBytes(passPhrase);
+            // salt config
+            _salt = 15;
+            _buffersize = 98;
+        }
+
+        private void WriteWithKey(byte[] buffy, int i, int operand)
+        {
+            buffy[i] = (byte)(operand ^ _pwByte[_jcount % _pwByte.Length]);
+            var b = buffy[i];
+            unchecked
+            {
+                _jcount++;
+                _pwByte[_jcount % _pwByte.Length] += b;
+            }
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+
+            var randint = 0;
+            int rCursor = offset;
+            int i = 0;
+            byte[] buffy = new byte[_buffersize];
+
+            for (; ; )
+            {
+
+                randint = _randy.Next(255);
+                if (randint < _salt)
+                {
+                    randint = _randy.Next(255);
+                    WriteWithKey(buffy, i, randint);
+                }
+                else
+                {
+                    WriteWithKey(buffy, i, randint ^ (int)buffer[rCursor]);
+                    rCursor++;
+                }
+
+                if (rCursor >= (offset + count))
+                {
+                    _stream.Write(buffy, 0, i + 1);
+                    break;
+                }
+                else
+                {
+                    i++;
+                    if (i >= _buffersize) { _stream.Write(buffy, 0, _buffersize); i = 0; }
+                }
+
+            }
+        }
+
+
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            //init
+            int wcursor = offset;
+            var randint = 0;
+            int currentoffset = offset;
+            //  bool stop = false;
+
+            // reading loop
+            for (; ; )
+            {
+                var lenread = _stream.Read(buffer, wcursor, count + offset - wcursor);
+                //wcursor = where we write the good bytes; is between current offset and (lenread + current offset)
+                //offset = first byte, needed for return 
+                // currentoffset = start of the current dekrabouille loop = last pos of the wcursor from the previous loop
+
+                // stop when lenread < 1 ? but need one more reading ;c
+                // if (lenread < (count + offset - wcursor)) { stop = true; }
+                currentoffset = wcursor;
+
+                //dekrabouille last reading
+                for (int i = wcursor; i < (lenread + currentoffset); ++i)
+                {
+
+                    //key stuff
+                    var b = buffer[i];
+                    buffer[i] ^= _pwByte[_jcount % _pwByte.Length];
+                    unchecked
+                    {
+                        _jcount++;
+                        _pwByte[_jcount % _pwByte.Length] += b;
+                    }
+
+                    //salt stuff
+                    randint = _randy.Next(255);
+
+                    if (randint < _salt)
+                    {
+                        randint = _randy.Next(255);
+                        // wcursor doesnt move, i will.
+                    }
+                    else
+                    {
+                        buffer[wcursor] = (byte)(randint ^ buffer[i]);
+                        wcursor++;
+                        //a good byte was added wcursor moves up. 
+                    }
+
+
+                }
+                if (wcursor >= (lenread + currentoffset)) { break; }
+            }
+            return wcursor - offset;
+        }
+
+
+
+
+        public override bool CanRead
+        {
+            get { if (_mode == KrabouilleMode.Krabouille) { return false; } else return true; }
+        }
+
+        public override bool CanSeek
+        {
+            get { return false; }
+        }
+
+        public override bool CanWrite
+        {
+            get { if (_mode == KrabouilleMode.Krabouille) { return true; } else return false; }
+        }
+
+        public override void Flush()
+        {
+            _stream.Flush();
+        }
+
+        public override long Length
+        {
+            get { return _stream.Length; }
+        }
+
+        public override long Position
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetLength(long value)
+        {
+            _stream.SetLength(value);
+        }
+
+        private int hashy(string input)
+        {
+
+            // LOLOLOLOL use something better
+            return input.GetHashCode();
+        }
+    }
+}
