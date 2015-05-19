@@ -39,6 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyser\Analyser.cs" />
+    <Compile Include="Analyser\BinaryNode.cs" />
+    <Compile Include="Analyser\IfNode.cs" />
+    <Compile Include="Analyser\ConstantNode.cs" />
+    <Compile Include="Analyser\ErrorNode.cs" />
+    <Compile Include="Analyser\Node.cs" />
     <Compile Include="Tokenizer\ITokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tokenizer\StringTokenizer.cs" />
