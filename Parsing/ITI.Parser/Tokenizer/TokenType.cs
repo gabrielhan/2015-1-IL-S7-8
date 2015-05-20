@@ -20,7 +20,9 @@ namespace ITI.Parser
         OpenPar = 16,
         ClosePar = 32,
         EndOfInput = 64,
-        Error = 128
+        QuestionMark = 128,
+        Colon = 256,
+        Error = 512
     }
 }
 
