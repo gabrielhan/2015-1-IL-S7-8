@@ -18,43 +18,49 @@ namespace gaby.Parser
     {
         double _currentValue;
         Node _currentNode;
+        bool _isConst;
+        string _useAsConst;
 
         public Node Result { get { return _currentNode; } }
 
         public override void Visit(BinaryNode n)
         {
-            VisitNode(n.Left);
-            var left = _currentValue;
-            VisitNode(n.Right);
-            var right = _currentValue;
-            switch (n.OperatorType)
-            {
-                case TokenType.Mult: _currentValue = left * right; break;
-                case TokenType.Div: _currentValue = left / right; break;
-                case TokenType.Plus: _currentValue = left + right; break;
-                case TokenType.Minus: _currentValue = left - right; break;
-            }
+           
         }
 
         public override void Visit(UnaryNode n)
         {
             VisitNode(n.Right);
             _currentValue = -_currentValue;
+            _currentNode = new UnaryNode(n.OperatorType,_currentNode);
         }
 
         public override void Visit(ConstantNode n)
         {
             _currentValue = n.Value;
+            _currentNode = n;
+            _isConst = true;
         }
 
         public override void Visit(VariableNode n)
         {
-            //todo
+            if (_useAsConst == n.Value)
+            {
+                _currentValue = 1;
+                _isConst = true;
+            }
+            else
+            {
+                _isConst = false;
+            }
+            _currentNode = n;
         }
 
         public override void Visit(IfNode n)
         {
+            // evaluer la condition si const
             VisitNode(n.Condition);
+            // si impossible, lancer un evaluateur sur les deux branches
             if (_currentValue >= 0)
             {
                 VisitNode(n.WhenTrue);
