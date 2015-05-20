@@ -75,7 +75,22 @@ namespace gaby.Parser
         {
             _tokenizer = tokenizer;
             if (_tokenizer.CurrentToken == TokenType.None) _tokenizer.GetNextToken();
-            return HandleExpression();
+            return HandleQuestion();
+        }
+
+        private Node HandleQuestion()
+        {
+            Node condition = HandleExpression();
+            if (_tokenizer.Match( TokenType.QuestionMark))
+            {
+                Node whenTrue = HandleExpression();
+                if(_tokenizer.Match( TokenType.Colon))
+                {
+                    return new IfNode(condition,whenTrue,HandleExpression());
+                }
+                return new ErrorNode("expected \":\"");
+            }
+            return condition;
         }
 
         private Node HandleExpression()
@@ -115,7 +130,7 @@ namespace gaby.Parser
             if (_tokenizer.MatchDouble(out numberValue)) return new ConstantNode(numberValue);
             if (_tokenizer.Match(TokenType.OpenPar))
             {
-                var e = HandleExpression();
+                var e = HandleQuestion();
                 if (!_tokenizer.Match(TokenType.ClosePar)) return new ErrorNode("Expected ).");
                 return e;
             }

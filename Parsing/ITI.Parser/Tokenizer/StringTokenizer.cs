@@ -276,6 +276,8 @@ namespace gaby.Parser
                 case '/': _curToken = TokenType.Div; break;
                 case '(': _curToken = TokenType.OpenPar; break;
                 case ')': _curToken = TokenType.ClosePar; break;
+                case '?': _curToken = TokenType.QuestionMark; break;
+                case ':': _curToken = TokenType.Colon; break;
                 default:
                     {
                         if (Char.IsDigit(c))
