@@ -76,6 +76,11 @@ namespace gaby.Parser
             _currentValue = n.Value;
         }
 
+        public override void Visit(VariableNode n)
+        {
+            //todo
+        }
+
         public override void Visit(IfNode n)
         {
             VisitNode(n.Condition);

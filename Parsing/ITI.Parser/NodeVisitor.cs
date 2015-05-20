@@ -82,5 +82,8 @@ namespace gaby.Parser
         }
 
 
+        public virtual void Visit(VariableNode n)
+        {
+        }
     }
 }

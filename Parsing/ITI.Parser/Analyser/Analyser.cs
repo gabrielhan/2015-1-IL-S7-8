@@ -127,7 +127,7 @@ namespace gaby.Parser
         private Node HandlePositiveFactor()
         {
             double numberValue;
-            if (_tokenizer.MatchDouble(out numberValue)) return new ConstantNode(numberValue);
+            if (_tokenizer.MatchDouble(out numberValue)) return new VariableNode(numberValue);
             if (_tokenizer.Match(TokenType.OpenPar))
             {
                 var e = HandleQuestion();
