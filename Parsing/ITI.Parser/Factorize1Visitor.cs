@@ -1,0 +1,68 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ITI.Parser
+{
+    class Factorize1Visitor
+    {
+    }
+}
+
+
+namespace gaby.Parser
+{
+    class Factorize1Visitor : NodeVisitor
+    {
+        double _currentValue;
+        Node _currentNode;
+
+        public Node Result { get { return _currentNode; } }
+
+        public override void Visit(BinaryNode n)
+        {
+            VisitNode(n.Left);
+            var left = _currentValue;
+            VisitNode(n.Right);
+            var right = _currentValue;
+            switch (n.OperatorType)
+            {
+                case TokenType.Mult: _currentValue = left * right; break;
+                case TokenType.Div: _currentValue = left / right; break;
+                case TokenType.Plus: _currentValue = left + right; break;
+                case TokenType.Minus: _currentValue = left - right; break;
+            }
+        }
+
+        public override void Visit(UnaryNode n)
+        {
+            VisitNode(n.Right);
+            _currentValue = -_currentValue;
+        }
+
+        public override void Visit(ConstantNode n)
+        {
+            _currentValue = n.Value;
+        }
+
+        public override void Visit(VariableNode n)
+        {
+            //todo
+        }
+
+        public override void Visit(IfNode n)
+        {
+            VisitNode(n.Condition);
+            if (_currentValue >= 0)
+            {
+                VisitNode(n.WhenTrue);
+            }
+            else
+            {
+                VisitNode(n.WhenFalse);
+            }
+        }
+    }
+}

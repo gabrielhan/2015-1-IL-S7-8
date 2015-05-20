@@ -48,6 +48,7 @@
     <Compile Include="Analyser\Node.cs" />
     <Compile Include="Analyser\VariableNode.cs" />
     <Compile Include="EvalVisitor.cs" />
+    <Compile Include="Factorize1Visitor.cs" />
     <Compile Include="NodeVisitor.cs" />
     <Compile Include="Tokenizer\ITokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

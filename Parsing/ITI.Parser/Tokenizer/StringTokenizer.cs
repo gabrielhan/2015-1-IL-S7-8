@@ -341,6 +341,7 @@ namespace gaby.Parser
                             {
                                 val = val * 10 + (int)(c - '0');
                                 Forward();
+                                if (Char.IsLetterOrDigit(Peek()) || Peek() == '_') _curToken = TokenType.Error;
                             }
                             _doubleValue = val;
                         }
