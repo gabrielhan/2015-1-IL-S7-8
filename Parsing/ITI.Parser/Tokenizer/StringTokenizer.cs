@@ -124,6 +124,8 @@ namespace ITI.Parser
             {
                 case '+': _curToken = TokenType.Plus; break;
                 case '-': _curToken = TokenType.Minus; break;
+                case '?': _curToken = TokenType.QuestionMark; break;
+                case ':': _curToken = TokenType.Colon; break;
                 case '*': _curToken = TokenType.Mult; break;
                 case '/': _curToken = TokenType.Div; break;
                 case '(': _curToken = TokenType.OpenPar; break;

@@ -12,6 +12,12 @@ namespace ITI.Parser
 
         public double Result { get { return _currentValue; } }
 
+        public override void Visit( IfNode n )
+        {
+            VisitNode( n.Condition );
+            VisitNode( _currentValue >= 0 ? n.WhenTrue : n.WhenFalse );
+        }
+
         public override void Visit( BinaryNode n )
         {
             VisitNode( n.Left );
@@ -37,6 +43,7 @@ namespace ITI.Parser
         {
             _currentValue = n.Value;
         }
+
 
     }
 }

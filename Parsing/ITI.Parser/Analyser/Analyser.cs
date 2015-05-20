@@ -14,7 +14,20 @@ namespace ITI.Parser
         {
             _tokenizer = tokenizer;
             if( _tokenizer.CurrentToken == TokenType.None ) _tokenizer.GetNextToken();
-            return HandleExpression();
+            return HandleSuperExpression();
+        }
+
+        private Node HandleSuperExpression()
+        {
+            var cond = HandleExpression();
+            if( _tokenizer.Match( TokenType.QuestionMark ) )
+            {
+                var whenTrue = HandleExpression();
+                if( !_tokenizer.Match( TokenType.Colon ) ) return new ErrorNode( "Expected ':'." );
+                var whenFalse = HandleExpression();
+                return new IfNode( cond, whenTrue, whenFalse );
+            }
+            return cond;
         }
 
         private Node HandleExpression()
@@ -54,7 +67,7 @@ namespace ITI.Parser
             if( _tokenizer.MatchDouble( out numberValue ) ) return new ConstantNode( numberValue );
             if( _tokenizer.Match( TokenType.OpenPar ) )
             {
-                var e = HandleExpression();
+                var e = HandleSuperExpression();
                 if( !_tokenizer.Match( TokenType.ClosePar ) ) return new ErrorNode( "Expected )." );
                 return e;
             }
