@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QueryableStuff
 {
-    public class SimpleDbContext
+    public class SimpleDbContext : IDisposable
     {
         List<Product> _products;
         List<User> _users;
@@ -22,9 +22,18 @@ namespace QueryableStuff
             _products.Add( new Product() { Name = "Sucette", Price = 5 } );
         }
 
-        public IList<Product> Products { get { return _products; } }
+        public IEnumerable<Product> Products { get { return _products; } }
+        
+        public IQueryable<Product> TProducts { get { return null; } }
 
         public IList<User> Users { get { return _users; } }
 
+        public void SaveChanges()
+        {
+        }
+
+        void IDisposable.Dispose()
+        {
+        }
     }
 }

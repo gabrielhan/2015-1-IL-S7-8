@@ -13,12 +13,41 @@ namespace QueryableStuff.Tests
         [Test]
         public void request_to_the_DAL()
         {
-            SimpleDbContext ctx = new SimpleDbContext();
-            foreach( var p in ctx.Products.Where( product => product.Price > 10 ) )
+            using( SimpleDbContext ctx = new SimpleDbContext() )
             {
-                Console.WriteLine( p.Name );
+                foreach( var p in ctx.Products.Where( product => product.Price > 10 ) )
+                {
+                    Console.WriteLine( p.Name );
+                }
             }
         }
+
+        [Test]
+        public void request_to_the_DAL_2()
+        {
+            using( SimpleDbContext ctx = new SimpleDbContext() )
+            {
+                foreach( var p in Enumerable.Where( ctx.Products, 
+                    prod => prod.Price >= 10 
+                    && prod.Name.ToUpperInvariant()[2] == 'R' ) )
+                {
+                    Console.WriteLine( p.Name );
+                }
+            }
+        }
+
+        [Test]
+        public void request_to_the_IQueryable()
+        {
+            using( SimpleDbContext ctx = new SimpleDbContext() )
+            {
+                foreach( var p in ctx.TProducts.Where( product => product.Price > 10 ) )
+                {
+                    Console.WriteLine( p.Name );
+                }
+            }
+        }
+
 
     }
 }
