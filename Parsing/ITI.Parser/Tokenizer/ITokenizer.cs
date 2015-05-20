@@ -52,5 +52,10 @@ namespace gaby.Parser
 
         bool MatchDouble(out double value);
 
+        bool MatchIdentifier(string id);
+
+        bool MatchIdentifier(out string id);
+
+
     }
 }

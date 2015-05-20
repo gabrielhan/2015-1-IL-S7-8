@@ -42,7 +42,16 @@ namespace gaby.Parser
         ClosePar = 32,
         EndOfInput = 64,
         Error = 128,
-        QuestionMark,
-        Colon
+        SemiColon,
+        Colon,
+        DoubleColon,
+        Coma,
+        Dot,
+        OpenSquare,
+        CloseSquare,
+        OpenBracket,
+        CloseBracket,
+        Identifier,
+        QuestionMark
     }
 }

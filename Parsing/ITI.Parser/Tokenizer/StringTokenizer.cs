@@ -162,6 +162,7 @@ namespace gaby.Parser
         int _maxPos;
         TokenType _curToken;
         double _doubleValue;
+        string _identifier;
 
         public StringTokenizer(string s)
             : this(s, 0, s.Length)
@@ -234,11 +235,11 @@ namespace gaby.Parser
             return false;
         }
 
-        public bool MatchInteger(int expectedValue)
+        public bool MatchInteger(int value)
         {
             if (_curToken == TokenType.Number
                 && _doubleValue < Int32.MaxValue
-                && (int)_doubleValue == expectedValue)
+                && (int)_doubleValue == value)
             {
                 GetNextToken();
                 return true;
@@ -259,27 +260,79 @@ namespace gaby.Parser
             return false;
         }
 
+
+        public bool MatchIdentifier(string value)
+        {
+            if (_curToken == TokenType.Identifier)
+            {
+                GetNextToken();
+                return true;
+            }
+            return false;
+        }
+
+        public bool MatchIdentifier(out string value)
+        {
+            if (_curToken == TokenType.Identifier)
+            {
+                value = _identifier;
+                GetNextToken();
+                return true;
+            }
+            value = null;
+            return false;
+        }
+
         public TokenType GetNextToken()
         {
-            if (IsEnd) return _curToken = TokenType.EndOfInput;
-            char c = Read();
-            while (Char.IsWhiteSpace(c))
+            char c;
+            int seq = 0;
+            for (; ; )
             {
                 if (IsEnd) return _curToken = TokenType.EndOfInput;
                 c = Read();
+                if (Char.IsWhiteSpace(c))
+                {
+
+                }
+                else if (c == '/' && seq == 0)
+                {
+                    if (Peek() == '/') { Forward(); seq = 1; }
+                    else if (Peek() == '*') { Forward(); seq = 2; }
+                    else { return _curToken = TokenType.Div; }
+                }
+                else if (c == '\n' && seq == 1) { seq = 0; }
+                else if (c == '*' && seq == 2 && Peek() == '/') { Forward(); seq = 0; }
+                else { break; }
             }
             switch (c)
             {
                 case '+': _curToken = TokenType.Plus; break;
                 case '-': _curToken = TokenType.Minus; break;
                 case '*': _curToken = TokenType.Mult; break;
-                case '/': _curToken = TokenType.Div; break;
                 case '(': _curToken = TokenType.OpenPar; break;
                 case ')': _curToken = TokenType.ClosePar; break;
+                case ';': _curToken = TokenType.SemiColon; break;
+                case '[': _curToken = TokenType.OpenSquare; break;
+                case ']': _curToken = TokenType.CloseSquare; break;
+                case '{': _curToken = TokenType.OpenBracket; break;
+                case '}': _curToken = TokenType.CloseBracket; break;
+                case '.': _curToken = TokenType.Dot; break;
+                case ',': _curToken = TokenType.Coma; break;
                 case '?': _curToken = TokenType.QuestionMark; break;
-                case ':': _curToken = TokenType.Colon; break;
+                case ':':
+                    {
+                        _curToken = TokenType.Colon;
+                        if (Peek() == ':')
+                        {
+                            _curToken = TokenType.DoubleColon;
+                            Forward();
+                        }
+                        break;
+                    }
                 default:
                     {
+
                         if (Char.IsDigit(c))
                         {
                             _curToken = TokenType.Number;
@@ -291,7 +344,26 @@ namespace gaby.Parser
                             }
                             _doubleValue = val;
                         }
-                        else _curToken = TokenType.Error;
+                        else if (Char.IsLetter(c) || c == '_')
+                        {
+                            _curToken = TokenType.Identifier;
+                            StringBuilder stb = new StringBuilder();
+                            stb.Append(c);
+                            for (; ; )
+                            {
+                                if (Char.IsLetterOrDigit(Peek()) || Peek() == '_')
+                                {
+                                    stb.Append(Peek());
+                                    Forward();
+                                }
+                                else break;
+                            }
+                            _identifier = stb.ToString();
+                        }
+                        else
+                        {
+                            _curToken = TokenType.Error;
+                        }
                         break;
                     }
             }
