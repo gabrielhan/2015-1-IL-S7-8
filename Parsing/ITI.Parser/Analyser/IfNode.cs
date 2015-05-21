@@ -46,9 +46,9 @@ namespace gaby.Parser
         public Node WhenFalse { get; private set; }
 
         [DebuggerStepThrough]
-        internal override void Accept(NodeVisitor visitor)
+        internal override Node Accept(NodeVisitor visitor)
         {
-            visitor.Visit(this);
+            return visitor.Visit(this);
         }
 
     }

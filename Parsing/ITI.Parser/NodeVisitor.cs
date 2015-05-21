@@ -49,41 +49,41 @@ namespace gaby.Parser
 {
     public abstract class NodeVisitor
     {
-        public void VisitNode(Node n)
+        public Node VisitNode(Node n)
         {
-            n.Accept(this);
+            return n.Accept(this);
         }
 
 
-        public virtual void Visit(BinaryNode n)
+        public virtual Node Visit(BinaryNode n)
         {
-            VisitNode(n.Left);
-            VisitNode(n.Right);
+            return new BinaryNode(n.OperatorType,VisitNode(n.Left),VisitNode(n.Right));
         }
 
-        public virtual void Visit(ConstantNode n)
+        public virtual Node Visit(ConstantNode n)
         {
+            return n;
         }
 
-        public virtual void Visit(ErrorNode n)
+        public virtual Node Visit(ErrorNode n)
         {
+            return n;
         }
 
-        public virtual void Visit(IfNode n)
+        public virtual Node Visit(IfNode n)
         {
-            VisitNode(n.Condition);
-            VisitNode(n.WhenTrue);
-            VisitNode(n.WhenFalse);
+            return new IfNode(VisitNode(n.Condition),VisitNode(n.WhenTrue),VisitNode(n.WhenFalse));
         }
 
-        public virtual void Visit(UnaryNode n)
+        public virtual Node Visit(UnaryNode n)
         {
-            VisitNode(n.Right);
+            return new UnaryNode(n.OperatorType,VisitNode(n.Right));
         }
 
 
-        public virtual void Visit(VariableNode n)
+        public virtual Node Visit(VariableNode n)
         {
+            return n;
         }
     }
 }

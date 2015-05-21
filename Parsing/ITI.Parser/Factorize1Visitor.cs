@@ -17,32 +17,30 @@ namespace gaby.Parser
     class Factorize1Visitor : NodeVisitor
     {
         double _currentValue;
-        Node _currentNode;
         bool _isConst;
         string _useAsConst;
 
-        public Node Result { get { return _currentNode; } }
-
-        public override void Visit(BinaryNode n)
+        public override Node Visit(BinaryNode n)
         {
-           
+            return n;
         }
 
-        public override void Visit(UnaryNode n)
+        public override Node Visit(UnaryNode n)
         {
             VisitNode(n.Right);
             _currentValue = -_currentValue;
-            _currentNode = new UnaryNode(n.OperatorType,_currentNode);
+            return new UnaryNode(n.OperatorType,_currentNode);
+
         }
 
-        public override void Visit(ConstantNode n)
+        public override Node Visit(ConstantNode n)
         {
             _currentValue = n.Value;
-            _currentNode = n;
             _isConst = true;
+            return n;
         }
 
-        public override void Visit(VariableNode n)
+        public override Node Visit(VariableNode n)
         {
             if (_useAsConst == n.Value)
             {
@@ -53,10 +51,10 @@ namespace gaby.Parser
             {
                 _isConst = false;
             }
-            _currentNode = n;
+            return n;
         }
 
-        public override void Visit(IfNode n)
+        public override Node Visit(IfNode n)
         {
             // evaluer la condition si const
             VisitNode(n.Condition);
@@ -69,6 +67,7 @@ namespace gaby.Parser
             {
                 VisitNode(n.WhenFalse);
             }
+            return n;
         }
     }
 }
