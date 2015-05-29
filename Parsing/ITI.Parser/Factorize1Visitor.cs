@@ -20,19 +20,28 @@ namespace gaby.Parser
         bool _isConst;
         string _useAsConst;
 
+        private int Operate(TokenType op, int leftval, int rightval)
+        {
+            switch (op)
+            {
+                case TokenType.Minus: return leftval - rightval;
+                case TokenType.Plus: return leftval + rightval;
+                case TokenType.Div: return leftval / rightval;
+                case TokenType.Mult: return leftval * rightval;
+                default: return 0;
+            }
+        }
+
         public override Node Visit(BinaryNode n)
         {
-            Node node = VisitNode(n.Left);
+            Node leftNode = VisitNode(n.Left);
             bool leftTest = _isConst;
+            var leftValue = _currentValue;
+            Node rightNode = VisitNode(n.Right);
+            
+            if(leftTest == true && _isConst == true)
 
-
-            switch(n.OperatorType)
-            {
-                case TokenType.Minus: break;
-                case TokenType.Plus: break;
-                case TokenType.Div: break;
-                case TokenType.Mult: break;
-            }
+            
             return new BinaryNode(n.OperatorType,VisitNode(n.Left),VisitNode(n.Right));
         }
 
