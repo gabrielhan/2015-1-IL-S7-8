@@ -22,14 +22,28 @@ namespace gaby.Parser
 
         public override Node Visit(BinaryNode n)
         {
-            return n;
+            Node node = VisitNode(n.Left);
+            bool leftTest = _isConst;
+
+
+            switch(n.OperatorType)
+            {
+                case TokenType.Minus: break;
+                case TokenType.Plus: break;
+                case TokenType.Div: break;
+                case TokenType.Mult: break;
+            }
+            return new BinaryNode(n.OperatorType,VisitNode(n.Left),VisitNode(n.Right));
         }
 
         public override Node Visit(UnaryNode n)
         {
-            VisitNode(n.Right);
-            _currentValue = -_currentValue;
-            return new UnaryNode(n.OperatorType,_currentNode);
+            Node node = new UnaryNode(n.OperatorType, VisitNode(n.Right));
+            if (n.OperatorType == TokenType.Minus)
+            {
+                _currentValue = -_currentValue;
+            }
+            return node;
 
         }
 
@@ -57,7 +71,8 @@ namespace gaby.Parser
         public override Node Visit(IfNode n)
         {
             // evaluer la condition si const
-            VisitNode(n.Condition);
+            Node node = VisitNode(n.Condition);
+
             // si impossible, lancer un evaluateur sur les deux branches
             if (_currentValue >= 0)
             {
